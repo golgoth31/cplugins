@@ -2,7 +2,8 @@
 # from .cp_debug import CpDebug
 # from pydoc import locate
 import json
-
+import argparse
+from .cp_options import CpOptions
 from .notifications import cp_email
 
 
@@ -26,9 +27,10 @@ class CpNotification():
             '11': 'long_date_time'
         }
         if args is not None:
+
             # load conf file
             try:
-                file = open("./cplugins-notifications.json")
+                file = open(args.config_notifications)
             except IOError as e:
                 print(e)
             else:

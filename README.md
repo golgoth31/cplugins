@@ -1,6 +1,6 @@
 # Cplugins
 
-Dev framework for nagios like check plugins writen in python
+Dev framework for nagios like check plugins writen in python.
 
 ## Developemnt
 
@@ -28,7 +28,7 @@ pipenv run pdoc --html --overwrite --html-dir docs cplugins
 ## Usage
 
 1. Copy or clone this repo to your nagios plugins directory
-2. Add a cplugins_notifications.json file at the root of the directory for notifications
+2. Add a cplugins_notifications.json file for notifications (default is in "/etc/centreon/cplugins_notifications.json")
 
 ### Notifications
 
@@ -50,7 +50,7 @@ To receive a notificaation with the accurate informations, you have to supply th
 Example of notification command in Centreon:
 
 ```txt
-$USER1$/cplugins/cplugins-notification-email.py -H localhost --to $CONTACTEMAIL$ -p '$HOSTNAME$' '$HOSTSTATE$' '$HOSTOUTPUT$' '$HOSTACKAUTHOR$' '$HOSTACKCOMMENT$' '$SERVICEDESC$' '$SERVICESTATE$' '$SERVICEOUTPUT$' '$SERVICEACKAUTHOR$' '$SERVICEACKCOMMENT$' '$NOTIFICATIONTYPE$' '$LONGDATETIME$'
+$USER1$/cplugins/cplugins-notification-email.py -H localhost -c $USER1$/cplugins/cplugins_notifications.json --to $CONTACTEMAIL$ -p '$HOSTNAME$' '$HOSTSTATE$' '$HOSTOUTPUT$' '$HOSTACKAUTHOR$' '$HOSTACKCOMMENT$' '$SERVICEDESC$' '$SERVICESTATE$' '$SERVICEOUTPUT$' '$SERVICEACKAUTHOR$' '$SERVICEACKCOMMENT$' '$NOTIFICATIONTYPE$' '$LONGDATETIME$'
 ```
 
 ### Examples

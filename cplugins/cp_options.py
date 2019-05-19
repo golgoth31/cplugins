@@ -23,12 +23,11 @@ import argparse
 
 class CpOptions():
     def __init__(self):
-
         self.parser = argparse.ArgumentParser(
             description='Cplugins help text', add_help=False
         )
 
-        default = self.parser.add_argument_group('default')
+        default = self.parser.add_argument_group('Default options')
         default.add_argument(
             '-v', '--version', action='version', version='%(prog)s 1.0'
         )
@@ -53,4 +52,19 @@ class CpOptions():
             help='choose output format',
             choices=['nagios', 'json'],
             default='nagios'
+        )
+
+        notif_group = self.parser.add_argument_group('Notifications options')
+        notif_group.add_argument(
+            '-c',
+            '--config-notifications',
+            help='Configuration file for notifications',
+            default='/etc/centreon/cplugins_notifications.json'
+        )
+        notif_group.add_argument(
+            '-p',
+            '--parameters',
+            help='a list of parameters',
+            nargs='+',
+            required=True
         )

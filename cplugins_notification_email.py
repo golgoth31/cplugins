@@ -19,28 +19,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
-# from cplugins import CpOutput, CpPerfdata, CpOptions
-from cplugins import cp_options, cp_notification
 import argparse
+from cplugins import cp_options, cp_notification
 
 # define specific command line arguments
-options = argparse.ArgumentParser(parents=[cp_options.CpOptions().parser])
-local_group = options.add_argument_group('Specific options')
-local_group.add_argument(
+OPTIONS = argparse.ArgumentParser(parents=[cp_options.CpOptions().parser])
+LOCAL_GROUP = OPTIONS.add_argument_group('Specific options')
+LOCAL_GROUP.add_argument(
     '-t', '--template', help='template to be used', default='default'
 )
-local_group.add_argument('--to', help='send email to', required=True)
-local_group.add_argument(
+LOCAL_GROUP.add_argument('--to', help='send email to', required=True)
+LOCAL_GROUP.add_argument(
     '--list-templates', help='template to be used', action='store_true'
 )
-local_group.add_argument(
-    '-p',
-    '--parameters',
-    help='a list of parameters',
-    nargs='+',
-    required=True
-)
-args = options.parse_args()
 
-notif = cp_notification.CpNotification('CpEmail', args=args)
-notif.sendEmail()
+ARGS = OPTIONS.parse_args()
+
+NOTIF = cp_notification.CpNotification('CpEmail', args=ARGS)
+NOTIF.sendEmail()
