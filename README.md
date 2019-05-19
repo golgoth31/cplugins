@@ -49,9 +49,23 @@ To receive a notificaation with the accurate informations, you have to supply th
 
 Example of notification command in Centreon:
 
-```txt
+```bash
 $USER1$/cplugins/cplugins-notification-email.py -H localhost -c $USER1$/cplugins/cplugins_notifications.json --to $CONTACTEMAIL$ -p '$HOSTNAME$' '$HOSTSTATE$' '$HOSTOUTPUT$' '$HOSTACKAUTHOR$' '$HOSTACKCOMMENT$' '$SERVICEDESC$' '$SERVICESTATE$' '$SERVICEOUTPUT$' '$SERVICEACKAUTHOR$' '$SERVICEACKCOMMENT$' '$NOTIFICATIONTYPE$' '$LONGDATETIME$'
 ```
+
+Example of received email (design inherited from [centreon-notifications](https://github.com/Shini31/centreon-notifications)):
+
+- Email UP/OK
+
+![Email UP/OK](/docs/images/email-ok.png)
+
+- Email Down/Critical
+
+![Email Down/Critical](/docs/images/email-down.png)
+
+- Email Unknown/Other
+
+![Email Unknown/Other](/docs/images/email-unknown.png)
 
 ### Examples
 
