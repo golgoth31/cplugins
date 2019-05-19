@@ -10,7 +10,11 @@ You can use pipenv to generate a specific virtualenv:
 pipenv --three install -e .
 ```
 
-## Doc
+## Documentation
+
+Modules documentation can be found here: [doc](docs/cplugins)
+
+This documentation is generated with the following commnd:
 
 ```bash
 pipenv run pdoc --html --overwrite --html-dir docs cplugins
