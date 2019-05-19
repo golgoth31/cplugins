@@ -1,30 +1,33 @@
 # -*- coding: utf-8 -*-
 
-# pybroker
-# Copyright (c) 2016 David Sabatie <pybroker@notrenet.com>
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
 #
-# This file is part of Pybroker.
+# This file is part of Cplugins.
 #
-# Foobar is free software: you can redistribute it and/or modify
+# Cplugins is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Foobar is distributed in the hope that it will be useful,
+# Cplugins is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 from .cp_options import CpOptions
-from .cp_debug import CpDebug
 
 
 class CpOutput():
     def __init__(self):
         self.default_output = 'Everything is OK'
         self.forced_output = None
+        self.exit_status = 0
+        self.exit_literal_status = ''
+        self.perfdata = []
         self.out_tab = []
         self.out_long_tab = []
         self.out_status = []
@@ -47,7 +50,7 @@ class CpOutput():
 
     def _render_nagios(self):
         # generate output text
-        if not len(self.out_tab):
+        if not self.out_tab:
             output = self.default_output
         else:
             if self.forced_output is not None:
@@ -56,8 +59,8 @@ class CpOutput():
                 output_text = ""
             for i in range(0, len(self.out_tab)):
                 # if the status is not OK, print it
-                if self.out_status[i] is not None and self.out_status[
-                    i] is not 'ok':
+                if self.out_status[i] is not None and \
+                        self.out_status[i] is not 'ok':
                     output_text += self.out_status[i].upper() + ': '
                 # add each output to the final text
                 output_text += self.out_tab[i] + ', '
@@ -77,7 +80,7 @@ class CpOutput():
 
     def _render_json(self):
         output_header = '{"output": {"short": ["'
-        if not len(self.out_tab):
+        if not self.out_tab:
             output = output_header + self.default_output
         else:
             output = output_header
@@ -85,8 +88,8 @@ class CpOutput():
                 output += self.forced_output + '","'
             for i in range(0, len(self.out_tab)):
                 # if the status is not OK, print it
-                if self.out_status[i] is not None and self.out_status[
-                    i] is not 'ok':
+                if self.out_status[i] is not None and \
+                        self.out_status[i] != 'ok':
                     output += self.out_status[i].upper + ': '
                 # add each output to the final text
                 output += self.out_tab[i] + '","'
@@ -94,7 +97,7 @@ class CpOutput():
         output += '"],"long": ['
 
         # add long output
-        if len(self.out_long_tab) > 0:
+        if self.out_long_tab:
             output += '"'
             for i in range(0, len(self.out_long_tab)):
                 output += self.out_long_tab[i] + '","'
@@ -104,7 +107,7 @@ class CpOutput():
         output += ']},"perfdata": ['
 
         # add perfdata if needed
-        if len(self.perfdata):
+        if self.perfdata:
             output += '{"'
             for perf in self.perfdata:
                 output += perf['perfname'] + '": {'
@@ -130,7 +133,7 @@ class CpOutput():
         else:
             self.perfdata = []
         # check for worststatus
-        self.exit_status, self.exit_literal_status = self._worststatus(
+        self.exit_status, self.exit_literal_status = self.worststatus(
             self.out_status
         )
 
@@ -138,7 +141,7 @@ class CpOutput():
         print(getattr(self, '_render_' + self.args[0].format)())
         exit(self.exit_status)
 
-    def _worststatus(self, status):
+    def worststatus(self, status):
         """Compute the worst status in the output array.
         status: list of status; ex. ['ok', 'WARNING']
         """

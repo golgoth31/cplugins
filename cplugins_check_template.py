@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# pybroker
-# Copyright (c) 2016 David Sabatie <pybroker@notrenet.com>
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
 #
-# This file is part of Pybroker.
+# This file is part of Cplugins.
 #
-# Foobar is free software: you can redistribute it and/or modify
+# Cplugins is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Foobar is distributed in the hope that it will be useful,
+# Cplugins is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -20,8 +20,8 @@
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 # import mandatory modules
-from cplugins import cp_output, cp_perfdata, cp_options
 import argparse
+from cplugins import cp_output, cp_perfdata, cp_options
 
 # import specific modules
 # put here the import neede by your plugin
@@ -57,18 +57,18 @@ import argparse
 # state_sum = {}
 
 # initialize the output module
-out = cplugins.CpOutput()
+OUT = cp_output.CpOutput()
 # initialize perfdata module if needed
 # perf = cplugins.CpPerfdata()
 
 # define specific command line arguments
 # use the default parser as parent parser
-options = argparse.ArgumentParser(parents=[cplugins.CpOptions().parser])
+OPTIONS = argparse.ArgumentParser(parents=[cp_options.CpOptions().parser])
 # define a local group of arguments
-local_group = options.add_argument_group('Specific options')
+LOCAL_GROUP = OPTIONS.add_argument_group('Specific options')
 # ex: local_group.add_argument('-r', '--region', help='give the aws region')
 # parse arguments
-args = options.parse_args()
+ARGS = OPTIONS.parse_args()
 
 # put your code here
 ################################################
@@ -83,6 +83,6 @@ args = options.parse_args()
 # ex: out.forced_output = out.default_output
 
 # render and exit
-out.render()
+OUT.render()
 # render perfdata
 # out.render(perf)

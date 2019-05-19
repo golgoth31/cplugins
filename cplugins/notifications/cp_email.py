@@ -1,4 +1,23 @@
 # -*- coding: utf-8 -*-
+
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
+#
+# This file is part of Cplugins.
+#
+# Cplugins is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Cplugins is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -93,13 +112,13 @@ class CpEmail():
 
     def host_html(self):
         # define some colors
-        if self.args.parameters['state'] == 'OK' or self.args.parameters[
-            'state'] == 'UP':
+        if self.args.parameters['state'] == 'OK' or \
+                self.args.parameters['state'] == 'UP':
             self.head_color = '#00b71a'
         elif self.args.parameters['state'] == 'WARNING':
             self.head_color = '#f48400'
-        elif self.args.parameters[
-            'state'] == 'CRITICAL' or self.args.parameters['state'] == 'DOWN':
+        elif self.args.parameters['state'] == 'CRITICAL' or \
+                self.args.parameters['state'] == 'DOWN':
             self.head_color = '#ff0000'
         else:
             self.head_color = '#000000'
@@ -113,8 +132,16 @@ class CpEmail():
                 <td valign='top'>
                     <table border=0 cellpadding=0 cellspacing=0 width='98%'>
                         <tr bgcolor=$head_color>
-                            <td width='140'><b><font color=#ffffff>Notification: </font></b></td>
-                            <td><font color=#ffffff><b> $notification_type $object_name [$state]</b></font></td>
+                            <td width='140'>
+                                <font color=#ffffff>
+                                <b>Notification: </b>
+                                </font>
+                            </td>
+                            <td>
+                                <font color=#ffffff>
+                                <b> $notification_type $object_name [$state]</b>
+                                </font>
+                            </td>
                         </tr>
                         <tr bgcolor=#fefefe>
                             <td><b>Hostname:</b></td>

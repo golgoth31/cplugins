@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
-# pybroker
-# Copyright (c) 2016 David Sabatie <pybroker@notrenet.com>
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
 #
-# This file is part of Pybroker.
+# This file is part of Cplugins.
 #
-# Foobar is free software: you can redistribute it and/or modify
+# Cplugins is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Foobar is distributed in the hope that it will be useful,
+# Cplugins is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -37,8 +37,8 @@ class CpOptions():
         default.add_argument(
             '-H',
             '--host',
-            help=
-            'give the hostname to query. For email notification, this is the smtp relay',
+            help='give the hostname to query. For email notification'
+            ', this is the smtp relay',
             required=True
         )
         default.add_argument(
@@ -54,17 +54,17 @@ class CpOptions():
             default='nagios'
         )
 
-        notif_group = self.parser.add_argument_group('Notifications options')
-        notif_group.add_argument(
-            '-c',
-            '--config-notifications',
-            help='Configuration file for notifications',
-            default='/etc/centreon/cplugins_notifications.json'
-        )
-        notif_group.add_argument(
-            '-p',
-            '--parameters',
-            help='a list of parameters',
-            nargs='+',
-            required=True
-        )
+        # notif_group = self.parser.add_argument_group('Notifications options')
+        # notif_group.add_argument(
+        #     '-c',
+        #     '--config-notifications',
+        #     help='Configuration file for notifications',
+        #     default='/etc/centreon/cplugins_notifications.json'
+        # )
+        # notif_group.add_argument(
+        #     '-p',
+        #     '--params',
+        #     help='a list of parameters',
+        #     nargs='+',
+        #     required=True
+        # )

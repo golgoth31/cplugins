@@ -1,9 +1,25 @@
 # -*- coding: utf-8 -*-
-# from .cp_debug import CpDebug
-# from pydoc import locate
+
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
+#
+# This file is part of Cplugins.
+#
+# Cplugins is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Cplugins is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 import json
-import argparse
-from .cp_options import CpOptions
+
 from .notifications import cp_email
 
 
@@ -61,7 +77,7 @@ class CpNotification():
                 self.args.parameters['output'
                                      ] = self.args.parameters['service_output']
 
-    def sendEmail(self):
+    def send_email(self):
         cp_email.CpEmail(self.conf, self.args)
 
     def parse_params(self):

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# pybroker
-# Copyright (c) 2016 David Sabatie <pybroker@notrenet.com>
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
 #
-# This file is part of Pybroker.
+# This file is part of Cplugins.
 #
-# Foobar is free software: you can redistribute it and/or modify
+# Cplugins is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Foobar is distributed in the hope that it will be useful,
+# Cplugins is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
@@ -27,7 +27,7 @@ from cplugins import cp_output, cp_perfdata, cp_options
 import boto3
 
 # define some variables
-EC2_instances_status = {
+EC2_INSTANCES_STATUS = {
     'pending': {
         'warning': 0,
         'critical': None
@@ -53,75 +53,75 @@ EC2_instances_status = {
         'critical': None
     }
 }
-state_sum = {}
-out = cp_output.CpOutput()
+STATE_SUM = {}
+OUT = cp_output.CpOutput()
 
 # define specific command line arguments
-options = argparse.ArgumentParser(parents=[cp_options.CpOptions().parser])
-local_group = options.add_argument_group('Specific options')
-local_group.add_argument('-r', '--region', help='give the aws region')
-local_group.add_argument(
+OPTIONS = argparse.ArgumentParser(parents=[cp_options.CpOptions().parser])
+LOCAL_GROUP = OPTIONS.add_argument_group('Specific options')
+LOCAL_GROUP.add_argument('-r', '--region', help='give the aws region')
+LOCAL_GROUP.add_argument(
     '-s',
     '--states',
     help='list of states to check; ex: running,stopped,...',
     nargs='+',
-    choices=EC2_instances_status.keys()
+    choices=EC2_INSTANCES_STATUS.keys()
 )
-local_group.add_argument(
+LOCAL_GROUP.add_argument(
     '-e',
     '--exclude-states',
     help='list of states to exclude from check',
     nargs='+',
-    choices=EC2_instances_status.keys()
+    choices=EC2_INSTANCES_STATUS.keys()
 )
-args = options.parse_args()
+ARGS = OPTIONS.parse_args()
 
 # initialise the state list to filter on
-if args.states is not None:
-    state_list = args.states
+if ARGS.states is not None:
+    STATE_LIST = ARGS.states
 else:
-    state_list = EC2_instances_status.keys()
-for state in state_list:
-    state_sum[state] = 0
+    STATE_LIST = EC2_INSTANCES_STATUS.keys()
+for state in STATE_LIST:
+    STATE_SUM[state] = 0
 
 # initialise instance id
-if args.host == 'all':
-    instance_id = []
+if ARGS.host == 'all':
+    INSTANCE_ID = []
 else:
-    instance_id = [args.host]
+    INSTANCE_ID = [ARGS.host]
 
 # request data
-ec2 = boto3.resource('ec2', region_name=args.region)
-instances = ec2.instances.filter(
-    InstanceIds=instance_id,
+EC2 = boto3.resource('ec2', region_name=ARGS.region)
+INSTANCES = EC2.instances.filter(
+    InstanceIds=INSTANCE_ID,
     Filters=[{
         'Name': 'instance-state-name',
-        'Values': state_list
+        'Values': STATE_LIST
     }]
 )
 
 # will use perfdata
-perf = cp_perfdata.CpPerfdata()
+PERF = cp_perfdata.CpPerfdata()
 
 # Sum of instances (total and each states)
-total = 0
-for instance in instances:
-    total += 1
-    state_sum[instance.state['Name']] += 1
-    out.add_long(
+TOTAL = 0
+for instance in INSTANCES:
+    TOTAL += 1
+    STATE_SUM[instance.state['Name']] += 1
+    OUT.add_long(
         '\'' + instance.id + '\' [state = ' + instance.state['Name'] + ']'
     )
 
-for state in state_list:
-    perf.add(
-        state_sum[state],
-        warning=EC2_instances_status[state]['warning'],
-        critical=EC2_instances_status[state]['critical'],
+for state in STATE_LIST:
+    PERF.add(
+        STATE_SUM[state],
+        warning=EC2_INSTANCES_STATUS[state]['warning'],
+        critical=EC2_INSTANCES_STATUS[state]['critical'],
         perfname=state,
-        output=state + ' instances: ' + str(state_sum[state])
+        output=state + ' instances: ' + str(STATE_SUM[state])
     )
 
-perf.add(total, perfname='total')
-out.default_output = 'Total instances: ' + str(total)
-out.forced_output = out.default_output
-out.render(perf)
+PERF.add(TOTAL, perfname='total')
+OUT.default_output = 'Total instances: ' + str(TOTAL)
+OUT.forced_output = OUT.default_output
+OUT.render(PERF)

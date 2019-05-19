@@ -982,6 +982,7 @@ table {
     <li class="mono"><a href="#cplugins.cp_output.CpOutput.add_long">add_long</a></li>
     <li class="mono"><a href="#cplugins.cp_output.CpOutput.add_short">add_short</a></li>
     <li class="mono"><a href="#cplugins.cp_output.CpOutput.render">render</a></li>
+    <li class="mono"><a href="#cplugins.cp_output.CpOutput.worststatus">worststatus</a></li>
   </ul>
 
         </li>
@@ -1006,31 +1007,34 @@ table {
   <div id="source-cplugins.cp_output" class="source">
     <pre><code># -*- coding: utf-8 -*-
 
-# pybroker
-# Copyright (c) 2016 David Sabatie <pybroker@notrenet.com>
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
 #
-# This file is part of Pybroker.
+# This file is part of Cplugins.
 #
-# Foobar is free software: you can redistribute it and/or modify
+# Cplugins is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# Foobar is distributed in the hope that it will be useful,
+# Cplugins is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 from .cp_options import CpOptions
-from .cp_debug import CpDebug
 
 
 class CpOutput():
     def __init__(self):
         self.default_output = 'Everything is OK'
         self.forced_output = None
+        self.exit_status = 0
+        self.exit_literal_status = ''
+        self.perfdata = []
         self.out_tab = []
         self.out_long_tab = []
         self.out_status = []
@@ -1053,7 +1057,7 @@ class CpOutput():
 
     def _render_nagios(self):
         # generate output text
-        if not len(self.out_tab):
+        if not self.out_tab:
             output = self.default_output
         else:
             if self.forced_output is not None:
@@ -1062,8 +1066,8 @@ class CpOutput():
                 output_text = ""
             for i in range(0, len(self.out_tab)):
                 # if the status is not OK, print it
-                if self.out_status[i] is not None and self.out_status[
-                    i] is not 'ok':
+                if self.out_status[i] is not None and \
+                        self.out_status[i] is not 'ok':
                     output_text += self.out_status[i].upper() + ': '
                 # add each output to the final text
                 output_text += self.out_tab[i] + ', '
@@ -1083,7 +1087,7 @@ class CpOutput():
 
     def _render_json(self):
         output_header = '{"output": {"short": ["'
-        if not len(self.out_tab):
+        if not self.out_tab:
             output = output_header + self.default_output
         else:
             output = output_header
@@ -1091,8 +1095,8 @@ class CpOutput():
                 output += self.forced_output + '","'
             for i in range(0, len(self.out_tab)):
                 # if the status is not OK, print it
-                if self.out_status[i] is not None and self.out_status[
-                    i] is not 'ok':
+                if self.out_status[i] is not None and \
+                        self.out_status[i] != 'ok':
                     output += self.out_status[i].upper + ': '
                 # add each output to the final text
                 output += self.out_tab[i] + '","'
@@ -1100,7 +1104,7 @@ class CpOutput():
         output += '"],"long": ['
 
         # add long output
-        if len(self.out_long_tab) > 0:
+        if self.out_long_tab:
             output += '"'
             for i in range(0, len(self.out_long_tab)):
                 output += self.out_long_tab[i] + '","'
@@ -1110,7 +1114,7 @@ class CpOutput():
         output += ']},"perfdata": ['
 
         # add perfdata if needed
-        if len(self.perfdata):
+        if self.perfdata:
             output += '{"'
             for perf in self.perfdata:
                 output += perf['perfname'] + '": {'
@@ -1136,7 +1140,7 @@ class CpOutput():
         else:
             self.perfdata = []
         # check for worststatus
-        self.exit_status, self.exit_literal_status = self._worststatus(
+        self.exit_status, self.exit_literal_status = self.worststatus(
             self.out_status
         )
 
@@ -1144,7 +1148,7 @@ class CpOutput():
         print(getattr(self, '_render_' + self.args[0].format)())
         exit(self.exit_status)
 
-    def _worststatus(self, status):
+    def worststatus(self, status):
         """Compute the worst status in the output array.
         status: list of status; ex. ['ok', 'WARNING']
         """
@@ -1179,6 +1183,9 @@ class CpOutput():
     def __init__(self):
         self.default_output = 'Everything is OK'
         self.forced_output = None
+        self.exit_status = 0
+        self.exit_literal_status = ''
+        self.perfdata = []
         self.out_tab = []
         self.out_long_tab = []
         self.out_status = []
@@ -1201,7 +1208,7 @@ class CpOutput():
 
     def _render_nagios(self):
         # generate output text
-        if not len(self.out_tab):
+        if not self.out_tab:
             output = self.default_output
         else:
             if self.forced_output is not None:
@@ -1210,8 +1217,8 @@ class CpOutput():
                 output_text = ""
             for i in range(0, len(self.out_tab)):
                 # if the status is not OK, print it
-                if self.out_status[i] is not None and self.out_status[
-                    i] is not 'ok':
+                if self.out_status[i] is not None and \
+                        self.out_status[i] is not 'ok':
                     output_text += self.out_status[i].upper() + ': '
                 # add each output to the final text
                 output_text += self.out_tab[i] + ', '
@@ -1231,7 +1238,7 @@ class CpOutput():
 
     def _render_json(self):
         output_header = '{"output": {"short": ["'
-        if not len(self.out_tab):
+        if not self.out_tab:
             output = output_header + self.default_output
         else:
             output = output_header
@@ -1239,8 +1246,8 @@ class CpOutput():
                 output += self.forced_output + '","'
             for i in range(0, len(self.out_tab)):
                 # if the status is not OK, print it
-                if self.out_status[i] is not None and self.out_status[
-                    i] is not 'ok':
+                if self.out_status[i] is not None and \
+                        self.out_status[i] != 'ok':
                     output += self.out_status[i].upper + ': '
                 # add each output to the final text
                 output += self.out_tab[i] + '","'
@@ -1248,7 +1255,7 @@ class CpOutput():
         output += '"],"long": ['
 
         # add long output
-        if len(self.out_long_tab) > 0:
+        if self.out_long_tab:
             output += '"'
             for i in range(0, len(self.out_long_tab)):
                 output += self.out_long_tab[i] + '","'
@@ -1258,7 +1265,7 @@ class CpOutput():
         output += ']},"perfdata": ['
 
         # add perfdata if needed
-        if len(self.perfdata):
+        if self.perfdata:
             output += '{"'
             for perf in self.perfdata:
                 output += perf['perfname'] + '": {'
@@ -1284,7 +1291,7 @@ class CpOutput():
         else:
             self.perfdata = []
         # check for worststatus
-        self.exit_status, self.exit_literal_status = self._worststatus(
+        self.exit_status, self.exit_literal_status = self.worststatus(
             self.out_status
         )
 
@@ -1292,7 +1299,7 @@ class CpOutput():
         print(getattr(self, '_render_' + self.args[0].format)())
         exit(self.exit_status)
 
-    def _worststatus(self, status):
+    def worststatus(self, status):
         """Compute the worst status in the output array.
         status: list of status; ex. ['ok', 'WARNING']
         """
@@ -1334,6 +1341,9 @@ class CpOutput():
     <pre><code>def __init__(self):
     self.default_output = 'Everything is OK'
     self.forced_output = None
+    self.exit_status = 0
+    self.exit_literal_status = ''
+    self.perfdata = []
     self.out_tab = []
     self.out_long_tab = []
     self.out_status = []
@@ -1419,12 +1429,45 @@ class CpOutput():
     else:
         self.perfdata = []
     # check for worststatus
-    self.exit_status, self.exit_literal_status = self._worststatus(
+    self.exit_status, self.exit_literal_status = self.worststatus(
         self.out_status
     )
     # print and exit
     print(getattr(self, '_render_' + self.args[0].format)())
     exit(self.exit_status)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="cplugins.cp_output.CpOutput.worststatus">
+    <p>def <span class="ident">worststatus</span>(</p><p>self, status)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Compute the worst status in the output array.
+status: list of status; ex. ['ok', 'WARNING']</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-cplugins.cp_output.CpOutput.worststatus', this);">Show source &equiv;</a></p>
+  <div id="source-cplugins.cp_output.CpOutput.worststatus" class="source">
+    <pre><code>def worststatus(self, status):
+    """Compute the worst status in the output array.
+    status: list of status; ex. ['ok', 'WARNING']
+    """
+    current_status = 0
+    literal_status = 'OK'
+    for i in range(0, len(status)):
+        if status[i] is not None:
+            local_status = status[i].upper()
+            if self.out_statuses[local_status] > current_status:
+                current_status = self.out_statuses[local_status]
+                literal_status = local_status
+    return [current_status, literal_status]
 </code></pre>
   </div>
 </div>
@@ -1444,6 +1487,26 @@ class CpOutput():
             </div>
             <div class="item">
             <p id="cplugins.cp_output.CpOutput.default_output" class="name">var <span class="ident">default_output</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="cplugins.cp_output.CpOutput.exit_literal_status" class="name">var <span class="ident">exit_literal_status</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="cplugins.cp_output.CpOutput.exit_status" class="name">var <span class="ident">exit_status</span></p>
             
 
             
@@ -1494,6 +1557,16 @@ class CpOutput():
             </div>
             <div class="item">
             <p id="cplugins.cp_output.CpOutput.out_tab" class="name">var <span class="ident">out_tab</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="cplugins.cp_output.CpOutput.perfdata" class="name">var <span class="ident">perfdata</span></p>
             
 
             

@@ -1,7 +1,25 @@
 # -*- coding: utf-8 -*-
+
+# Cplugins
+# Copyright (c) 2016 David Sabatie <github@notrenet.com>
+#
+# This file is part of Cplugins.
+#
+# Cplugins is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# Cplugins is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+
 from .cp_common import CpCommon
 from .cp_output import CpOutput
-from .cp_debug import CpDebug
 
 
 class CpPerfdata():
@@ -21,8 +39,8 @@ class CpPerfdata():
     def _compute(self, threshold, status):
         self._parse_threshold(threshold)
         if not self._inside:
-            if (self._end is not None and self._value > self._end
-                ) or (self._start is not None and self._value < self._start):
+            if (self._end is not None and self._value > self._end) or \
+                    (self._start is not None and self._value < self._start):
                 self._perf_status.append(status)
                 self._error = 1
         else:
@@ -64,12 +82,13 @@ class CpPerfdata():
         critical='',
         warning='',
         unit='',
-        min=None,
-        max=None,
+        lmin='',
+        lmax='',
         output=None,
         perfname='Value',
-        info=None  # if given will overwrite warning, critical, min or max individual value
+        info=None
     ):
+        # if info given will overwrite warning, critical, min or max individual value
         self._error = 0
         data = {
             'perfname': '',
@@ -87,8 +106,8 @@ class CpPerfdata():
             data['unit'] = unit
             data['warning'] = warning
             data['critical'] = critical
-            data['min'] = str(min)
-            data['max'] = str(max)
+            data['min'] = str(lmin)
+            data['max'] = str(lmax)
             if info is not None:
                 temp_data = info.split(',')
                 data['unit'] = temp_data[0]
@@ -108,7 +127,7 @@ class CpPerfdata():
                 if output is None:
                     output = perfname
                 self.out.add_short(
-                    output, status=self.out._worststatus(self._perf_status)[1]
+                    output, status=self.out.worststatus(self._perf_status)[1]
                 )
         except ValueError as e:
             print(e)
