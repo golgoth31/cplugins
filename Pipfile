@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+pdoc = "*"
 
 [packages]
 cplugins = {editable = true,path = "."}

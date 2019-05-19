@@ -10,6 +10,12 @@ You can use pipenv to generate a specific virtualenv:
 pipenv --three install -e .
 ```
 
+## Doc
+
+```bash
+pipenv run pdoc --html --overwrite --html-dir docs cplugins
+```
+
 ## Features
 
 - generate well formated output (short, long and performances data), compliant with Centreon, Nagios, etc
